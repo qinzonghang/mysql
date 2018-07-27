@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text" id="look">
+    <div id="msg"></div>
+    <script src="jquery-3.3.1.min.js"></script>
+    <script>
+        $('#look').on('keyup', function() {
+            $('#msg').html("");
+            if ($.trim($(this).val()) !== '') {
+                $.ajax({
+                    url: '/api/index?val=' + $.trim($(this).val()),
+                    success: function(data) {
+                        if (data.code === 0) {
+                            var html = "";
+                            data.msg.forEach(function(file) {
+                                html += '<p>' + file.user + '</p>'
+                            });
+                            $('#msg').html(html);
+                        } else {
+                            $('#msg').html(data.msg);
+                        }
+                    }
+                });
+            };
+        });
+    </script>
+</body>
+
+</html>

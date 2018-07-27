@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            list-style: none;
+        }
+        
+        ol>li {
+            float: left;
+            width: 50px;
+            height: 20px;
+            border: 1px solid pink;
+            text-align: center;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <%user.forEach(function(file){%>
+            <li>
+                <%=file.user%>
+            </li>
+            <%})%>
+    </ul>
+    <ol>
+        <%for(var i=1;i<=page;i++){%>
+            <li>
+                <%=i%>页</li>
+            <%}%>
+    </ol>
+    <script src="jquery-3.3.1.min.js"></script>
+    <script>
+        $('ol>li').on('click', function() {
+            $.ajax({
+                url: '/api/page',
+                type: 'post',
+                data: {
+                    limit: 5,
+                    idx: $(this).index() + 1
+                },
+                success: function(data) {
+                    if (data.code === 0) {
+                        var html = "";
+                        data.msg.forEach(function(file) {
+                            html += '<li>' + file.user + '</li>'
+                        });
+                        $('ul').html(html);
+                    } else {
+                        $('ul').html(data.msg);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

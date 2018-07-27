@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text" value=<%=query.user%>>
+    <input type="password" value=<%=query.pwd%>>
+    <input type="button" value="确定" data-id=<%=query.id%>>
+    <script>
+        var user = document.querySelectorAll('input')[0];
+        var pwd = document.querySelectorAll('input')[1];
+        var sureBtn = document.querySelectorAll('input')[2];
+        sureBtn.onclick = function() {
+            var xml = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+            xml.onload = function(res) {
+                if (res.target.status === 200) {
+                    var data = JSON.parse(res.target.response);
+                    alert(data.msg);
+                    if (data.code === 0) {
+                        location.href = '/user';
+                    }
+                }
+            }
+            xml.open('post', '/api/update', true);
+            xml.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+            xml.send(`id=${this.getAttribute('data-id')}&user=${user.value}&pwd=${pwd.value}`);
+        }
+    </script>
+</body>
+
+</html>

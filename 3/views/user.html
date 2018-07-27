@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            list-style: none;
+        }
+        
+        ul>li {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <%data.forEach(function(file){%>
+            <li>序列号:
+                <%=file.id%> &nbsp; 姓名:
+                    <%=file.user%> &nbsp; 密码:
+                        <%=file.pwd%> &nbsp;
+                            <button class="removeBtn" data-id=<%=file.id%>>删除</button> &nbsp;
+                            <button class="updateBtn" data-id=<%=file.id%> data-user=<%=file.user%> data-pwd=<%=file.pwd%>>修改</button>
+            </li>
+            <%})%>
+    </ul>
+    <script>
+        var removeBtn = document.querySelectorAll('.removeBtn');
+        var updateBtn = document.querySelectorAll('.updateBtn');
+        for (var i = 0; i < removeBtn.length; i++) {
+            (function(i) {
+                removeBtn[i].onclick = function() {
+                    var xml = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+                    xml.onload = function(res) {
+                        if (res.target.status === 200) {
+                            var data = JSON.parse(res.target.response);
+                            alert(data.msg);
+                            if (data.code === 0) {
+                                location.reload();
+                            }
+                        }
+                    }
+                    xml.open('get', `/api/delete?id=${this.getAttribute('data-id')}`, true);
+                    xml.send();
+                }
+            })(i)
+        }
+        for (var i = 0; i < updateBtn.length; i++) {
+            (function(i) {
+                updateBtn[i].onclick = function() {
+                    // location.href = `/update.html?id=${this.getAttribute('data-id')}&user=${this.getAttribute('data-user')}&pwd=${this.getAttribute('data-pwd')}`
+                    location.href = `/update?id=${this.getAttribute('data-id')}&user=${this.getAttribute('data-user')}&pwd=${this.getAttribute('data-pwd')}`
+                }
+            })(i)
+        }
+    </script>
+</body>
+
+</html>
